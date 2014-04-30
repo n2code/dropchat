@@ -16,6 +16,8 @@ namespace DropboxChatPrototype
 	{
 		string chatpath;
 		string pathsep;
+		bool newmsg = true;
+		FileSystemWatcher watchman;
 		
 		public MainForm()
 		{
@@ -25,8 +27,11 @@ namespace DropboxChatPrototype
 			try
 			{
 				Directory.CreateDirectory(chatpath);
-			} catch {}
-			updatechat();
+			} catch { /*evil, please change*/ }
+			watchman = new FileSystemWatcher(chatpath,"*.CHAT.*");
+			watchman.Changed += new FileSystemEventHandler(OnChangeOrCreate);
+			watchman.Created += new FileSystemEventHandler(OnChangeOrCreate);
+			watchman.EnableRaisingEvents = true;
 		}
 		
 		void Button1Click(object sender, EventArgs e)
@@ -47,12 +52,7 @@ namespace DropboxChatPrototype
 					input.Focus();
 				}
 			}
-			/*else if (nickname.Text=="SECUREFILE" && File.Exists(input.Text))
-			{
-				MessageBox.Show(WriteSecureFile(Path.GetDirectoryName(input.Text),Path.GetFileName(input.Text),File.ReadAllText(input.Text,Encoding.UTF8)),"OUTPUT:");
-				input.Focus();
-			}*/
-			else
+				else
 			{
 				input.Text = input.Text.TrimEnd();
 				if (input.Text.TrimStart().StartsWith("#")) input.Text = input.Text.Replace("#","");
@@ -111,6 +111,10 @@ namespace DropboxChatPrototype
 				this.WindowState = FormWindowState.Minimized;
 				e.Handled = true;
 				e.SuppressKeyPress = true;
+			}
+			if (e.KeyCode == Keys.Q && e.Control)
+			{
+				Application.Exit();
 			}
 		}
 		
@@ -181,12 +185,14 @@ namespace DropboxChatPrototype
 			}
 
 		}
-		void Timer1Tick(object sender, EventArgs e)
+		
+		void OnChangeOrCreate(object source, FileSystemEventArgs e)
 		{
-			updatechat();
+			//call invoke here?
+			newmsg = true;
 		}
 		
-		void MainFormShown(object sender, EventArgs e)
+			void MainFormShown(object sender, EventArgs e)
 		{
 			nickname.SelectionStart = 0;
 			nickname.SelectionLength = nickname.Text.Length;
@@ -220,6 +226,15 @@ namespace DropboxChatPrototype
 		
 		void InputTextChanged(object sender, EventArgs e)
 		{
+		}
+		
+		void RefreshTimerTick(object sender, EventArgs e)
+		{
+			if (newmsg)
+			{
+				newmsg = false;
+				updatechat();
+			}
 		}
 	}
 }

@@ -33,9 +33,9 @@
 			this.sendbutton = new System.Windows.Forms.Button();
 			this.nickname = new System.Windows.Forms.TextBox();
 			this.input = new System.Windows.Forms.TextBox();
-			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.chatview = new System.Windows.Forms.RichTextBox();
 			this.prechatview = new System.Windows.Forms.RichTextBox();
+			this.refreshTimer = new System.Windows.Forms.Timer(this.components);
 			this.SuspendLayout();
 			// 
 			// sendbutton
@@ -72,12 +72,6 @@
 			this.input.TextChanged += new System.EventHandler(this.InputTextChanged);
 			this.input.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox3KeyDown);
 			// 
-			// timer1
-			// 
-			this.timer1.Enabled = true;
-			this.timer1.Interval = 1000;
-			this.timer1.Tick += new System.EventHandler(this.Timer1Tick);
-			// 
 			// chatview
 			// 
 			this.chatview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -102,6 +96,12 @@
 			this.prechatview.Text = "";
 			this.prechatview.Visible = false;
 			// 
+			// refreshTimer
+			// 
+			this.refreshTimer.Enabled = true;
+			this.refreshTimer.Interval = 1000;
+			this.refreshTimer.Tick += new System.EventHandler(this.RefreshTimerTick);
+			// 
 			// MainForm
 			// 
 			this.AcceptButton = this.sendbutton;
@@ -117,15 +117,15 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MinimumSize = new System.Drawing.Size(570, 347);
 			this.Name = "MainForm";
-			this.Text = "DropChat";
+			this.Text = "DropChat (Esc to minimize, Ctrl+Q to quit)";
 			this.Shown += new System.EventHandler(this.MainFormShown);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainFormKeyDown);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.Timer refreshTimer;
 		private System.Windows.Forms.RichTextBox prechatview;
 		private System.Windows.Forms.RichTextBox chatview;
-		private System.Windows.Forms.Timer timer1;
 		private System.Windows.Forms.TextBox input;
 		private System.Windows.Forms.TextBox nickname;
 		private System.Windows.Forms.Button sendbutton;
